@@ -9,5 +9,7 @@ namespace MauiAppMinhasCompras.Models
         public string Descricao { get; set; }
         public Double Quantidade { get; set; }
         public Double Preco { get; set; }
+
+        public Double Total { get => Quantidade * Preco;  }
     }
 }
