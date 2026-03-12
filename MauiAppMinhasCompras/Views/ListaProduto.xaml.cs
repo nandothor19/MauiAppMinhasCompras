@@ -33,7 +33,7 @@ public partial class ListaProduto : ContentPage
 			DisplayAlert("Ops", ex.Message, "OK");
 		}
     }
-
+			//search
     private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
     {
 		string q = e.NewTextValue;
@@ -44,7 +44,7 @@ public partial class ListaProduto : ContentPage
 
         tmp.ForEach(i => lista.Add(i));
     }
-
+			 //soma dos produtos
     private void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
 		double soma = lista.Sum(i => i.Total);
@@ -53,7 +53,7 @@ public partial class ListaProduto : ContentPage
 
 		DisplayAlert ("Total Dos Produtos", msg, "OK");
     }
-
+			// excluir
     private void MenuItem_Clicked(object sender, EventArgs e)
     {
 
