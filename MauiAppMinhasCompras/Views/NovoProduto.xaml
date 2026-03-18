@@ -17,7 +17,5 @@
         
         <Label Text="Preço unitário: " />
         <Entry x:Name="txt_preco" Keyboard="Numeric" />
-
-        <Button Text="voltar" Clicked="Button_Clicked_1"/>  
     </VerticalStackLayout>
 </ContentPage>
