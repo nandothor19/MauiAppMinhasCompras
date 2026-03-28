@@ -1,6 +1,5 @@
 using MauiAppMinhasCompras.Models;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace MauiAppMinhasCompras.Views;
 
@@ -51,6 +50,8 @@ public partial class ListaProduto : ContentPage
 		{
 			string q = e.NewTextValue;
 
+			lst_produtos.IsRefreshing = true;
+
 			lista.Clear();
 
 			List<Produto> tmp = await App.Db.Search(q);
@@ -60,6 +61,10 @@ public partial class ListaProduto : ContentPage
 		catch (Exception ex)
 		{
 			await DisplayAlert("Ops", ex.Message, "OK");
+		}
+		finally
+		{
+			lst_produtos.IsRefreshing = false;
 		}
 	}
 	//soma dos produtos
@@ -72,30 +77,30 @@ public partial class ListaProduto : ContentPage
 		DisplayAlert("Total Dos Produtos", msg, "OK");
 	}
 	// excluir
-    private async void MenuItem_Clicked_1(object sender, EventArgs e)
-    {
-        try
-        {
-            MenuItem selecionado = sender as MenuItem;
+	private async void MenuItem_Clicked_1(object sender, EventArgs e)
+	{
+		try
+		{
+			MenuItem selecionado = sender as MenuItem;
 
-            Produto p = selecionado.BindingContext as Produto;
+			Produto p = selecionado.BindingContext as Produto;
 
-            bool confirm = await DisplayAlert("Tem certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
+			bool confirm = await DisplayAlert("Tem certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
 
-            if (confirm)
-            {
-                await App.Db.delete(p.Id);
-                lista.Remove(p);
-            }
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Ops", ex.Message, "OK");
-        }
-    }
+			if (confirm)
+			{
+				await App.Db.delete(p.Id);
+				lista.Remove(p);
+			}
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Ops", ex.Message, "OK");
+		}
+	}
 
-    private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-    {
+	private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+	{
 		try
 		{
 			Produto p = e.SelectedItem as Produto;
@@ -105,8 +110,90 @@ public partial class ListaProduto : ContentPage
 				BindingContext = p,
 			});
 		}
-		catch (Exception ex) {
+		catch (Exception ex)
+		{
 			DisplayAlert("Ops", ex.Message, "OK");
 		}
-    }
+	}
+
+	private async void lst_produtos_Refreshing(object sender, EventArgs e)
+	{
+		try
+		{
+			lista.Clear();
+
+			List<Produto> tmp = await App.Db.Getall();
+
+			tmp.ForEach(i => lista.Add(i));
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Ops", ex.Message, "OK");
+		}
+		finally
+		{
+			lst_produtos.IsRefreshing = false;
+		}
+	}
+
+	private async Task ToolbarItem_Filtro(object sender, EventArgs e)
+	{
+		try
+		{
+
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Ops", ex.Message, "OK");
+		}
+	}
+	//Relatório
+
+	private async void ToolbarItem_Clicked_2(object sender, EventArgs e)
+	{
+		var lista = await App.Db.Getall();
+
+		var relatorio = lista
+			.GroupBy(p => p.Categoria)
+			.Select(g => new
+			{
+				Categoria = g.Key,
+				Total = g.Sum(p => p.Total)
+			})
+			.OrderByDescending(x => x.Total);
+
+		string msg = "";
+
+		foreach (var item in relatorio)
+		{
+			msg += $"{item.Categoria}: R$ {item.Total:F2}\n";
+		}
+
+		await DisplayAlert("Relatório por Categoria", msg, "OK");
+	}
+
+	private async void OnFiltroChanged(object sender, EventArgs e)
+	{
+		try
+		{
+			string categoria = pickerFiltro.SelectedItem.ToString();
+
+			lista.Clear();
+
+			List<Produto> produtos = await App.Db.Getall();
+
+			if (categoria != "Todos")
+			{
+				produtos = produtos
+					.Where(p => p.Categoria == categoria)
+					.ToList();
+			}
+
+			produtos.ForEach(p => lista.Add(p));
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlert("Erro", ex.Message, "OK");
+		}
+	}
 }

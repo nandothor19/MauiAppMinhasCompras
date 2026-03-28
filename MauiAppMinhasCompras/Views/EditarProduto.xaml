@@ -16,6 +16,19 @@
             <Entry x:Name="txt_quantidade" Text="{Binding Quantidade}" Keyboard="Numeric" />
 
             <Label Text="Preço unitário: " />
-            <Entry x:Name="txt_preco" Text="{Binding Preco}" Keyboard="Numeric" /> 
-        </VerticalStackLayout>
+            <Entry x:Name="txt_preco" Text="{Binding Preco}" Keyboard="Numeric" />
+
+        <Picker Title="Categoria" x:Name="txt_categoria">
+            <Picker.Items>
+                <x:String>Higiene</x:String>
+                <x:String>Comida</x:String>
+                <x:String>Limpeza</x:String>
+                <x:String>Remedio</x:String>
+                <x:String>Roupa</x:String>
+                <x:String>Eletronico</x:String>
+                <x:String>Pets</x:String>
+            </Picker.Items>
+        </Picker>
+            
+    </VerticalStackLayout>
 </ContentPage>

@@ -29,6 +29,8 @@ namespace MauiAppMinhasCompras
         {
             InitializeComponent();
 
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("pt-br");
+
             //MainPage = new AppShell();
             MainPage = new NavigationPage(new Views.ListaProduto());
         }
