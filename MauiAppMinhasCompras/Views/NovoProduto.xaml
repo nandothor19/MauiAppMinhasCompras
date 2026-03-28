@@ -26,6 +26,7 @@
                 <x:String>Remedio</x:String>
                 <x:String>Roupa</x:String>
                 <x:String>Eletronico</x:String>
+                <x:String>Pets</x:String>
             </Picker.Items>
         </Picker>
         
